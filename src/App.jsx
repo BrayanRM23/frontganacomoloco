@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route index element={<Form callback={setUser}/>}></Route>
         <Route path='/cambiarP' element={<ChangePassword/>}></Route>
-        <Route path='/AdminForm' element={<AdminForm/>}></Route>
+        <Route path="/adminform" element={<AdminForm/>} />
         <Route path='/crearusers' element={<Crearusuarios/>}></Route>
         <Route path='/ganadores' element={<Ganadores/>}></Route>
         <Route path='/UserHome' element={<UserHome user={user}/>}></Route>
