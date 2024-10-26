@@ -15,7 +15,6 @@ function AdminForm({ callback }) {
             return;
         }
 
-        // Validación simple sin autenticación
         fetch('https://backganacomoloco-b1gi.vercel.app/v1/signos/loginadmin', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
@@ -23,7 +22,6 @@ function AdminForm({ callback }) {
         })
         .then(res => res.json())
         .then(responseData => {
-            // Verificar el tipo de usuario en la respuesta
             if (responseData.resultado === 'user') {
                 callback(username);
                 goTo('/userHome');
