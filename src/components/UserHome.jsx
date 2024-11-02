@@ -15,9 +15,9 @@ function UserHome({ user }) {
     // Función para manejar el registro del código
     const handleRegistrarCodigo = async (event) => {
         event.preventDefault();
-    
-        if (!codigo) {
-            alert("Por favor, ingrese un código para registrar.");
+
+        if (codigo.length !== 4 || isNaN(codigo)) {
+            alert("El código debe tener exactamente 4 dígitos numéricos.");
             return;
         }
 
@@ -27,11 +27,11 @@ function UserHome({ user }) {
                 headers: { 
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ codigo, usuario: user }), // Enviar usuario junto con el código
+                body: JSON.stringify({ codigo, usuario: user }),
             });
-    
+
             const data = await response.json();
-    
+
             if (data.resultado === "Código registrado correctamente") {
                 alert("Código registrado con éxito");
                 setCodigo("");  // Limpiar el campo de entrada
@@ -46,24 +46,23 @@ function UserHome({ user }) {
     };
 
     // Función para obtener los códigos registrados del backend usando el método POST
-const fetchCodigosRegistrados = async () => {
-    try {
-        const response = await fetch("https://backganacomoloco-b1gi.vercel.app/v1/signos/codigosregistrados", {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ usuario: user }) // Enviar el usuario para filtrar
-        });
+    const fetchCodigosRegistrados = async () => {
+        try {
+            const response = await fetch("https://backganacomoloco-b1gi.vercel.app/v1/signos/codigosregistrados", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ usuario: user })
+            });
 
-        const data = await response.json();
-        setCodigosRegistrados(data.codigos || []);  // Guardar los códigos obtenidos
-    } catch (error) {
-        console.error("Error obteniendo los códigos:", error);
-        alert("Hubo un problema al obtener los códigos registrados.");
-    }
-};
-
+            const data = await response.json();
+            setCodigosRegistrados(data.codigos || []);
+        } catch (error) {
+            console.error("Error obteniendo los códigos:", error);
+            alert("Hubo un problema al obtener los códigos registrados.");
+        }
+    };
 
     // Cargar los códigos registrados al montar el componente
     useEffect(() => {
@@ -81,8 +80,14 @@ const fetchCodigosRegistrados = async () => {
                     type="text"
                     id="codigo"
                     value={codigo}
-                    onChange={(e) => setCodigo(e.target.value)}
+                    onChange={(e) => {
+                        const input = e.target.value;
+                        if (/^\d{0,4}$/.test(input)) {
+                            setCodigo(input);
+                        }
+                    }}
                     placeholder="Ingresa tu código"
+                    maxLength="4"
                 />
                 <button type="submit">Registrar</button>
             </form>
@@ -118,3 +123,4 @@ const fetchCodigosRegistrados = async () => {
 }
 
 export default UserHome;
+
